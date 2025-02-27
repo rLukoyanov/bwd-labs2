@@ -7,6 +7,8 @@ const { User, Event } = require('./models');
 const eventRouter = require('./routes/eventRoutes');
 const userRouter = require('./routes/userRoutes');
 const customLogger = require("./middleware/loggingMiddleware");
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./config/swagger');
 
 dotenv.config();
 
@@ -25,6 +27,9 @@ app.use(customLogger);
 // Подключаем маршруты
 app.use('/api/events', eventRouter);
 app.use('/api/users', userRouter);
+
+// Add before your routes
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 app.get('/', (req, res) => {
   res.json({
