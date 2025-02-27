@@ -3,6 +3,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const sequelize = require("./config/db");
 const { User, Event } = require('./models');
+const eventRouter = require('./routes/eventRoutes');
+const userRouter = require('./routes/userRoutes');
 
 dotenv.config();
 
@@ -11,6 +13,8 @@ const PORT = process.env.PORT || 5005;
 
 app.use(cors());
 app.use(express.json());
+app.use('/api/events', eventRouter);
+app.use('/api/users', userRouter);
 
 app.get('/', (req, res) => {
   res.json({
