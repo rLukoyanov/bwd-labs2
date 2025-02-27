@@ -1,6 +1,7 @@
 const Router = require('express');
 const router = new Router();
 const { Event } = require('../models');
+const validateApiKey = require('../middleware/authMiddleware');
 
 // Получение списка всех мероприятий с пагинацией
 router.get('/', async (req, res) => {
@@ -39,8 +40,8 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Создание мероприятия
-router.post('/', async (req, res) => {
+// Создание мероприятия (защищено API-ключом)
+router.post('/', validateApiKey, async (req, res) => {
     try {
         const { title, description, date, createdBy } = req.body;
         
@@ -84,8 +85,8 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// Удаление мероприятия
-router.delete('/:id', async (req, res) => {
+// Удаление мероприятия (защищено API-ключом)
+router.delete('/:id', validateApiKey, async (req, res) => {
     try {
         const event = await Event.findByPk(req.params.id);
         if (!event) {
