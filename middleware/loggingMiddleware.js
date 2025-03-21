@@ -11,4 +11,4 @@ const customLogger = (req, res, next) => {
     next();
 };
 
-module.exports = customLogger; 
+export default customLogger;

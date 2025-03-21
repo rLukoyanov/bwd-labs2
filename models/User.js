@@ -1,7 +1,5 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
-const User = require('./User');
-const Event = require('./Event');
+import { Sequelize, DataTypes } from 'sequelize';
+import sequelize from '../config/db.js';
 
 const UserModel = sequelize.define('User', {
   id: {
@@ -21,6 +19,10 @@ const UserModel = sequelize.define('User', {
       isEmail: true
     }
   },
+  password: {  // Добавлено поле пароля с разрешением NULL
+    type: DataTypes.STRING,
+    allowNull: true,  // Разрешаем NULL на этапе миграции
+  },
   createdAt: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
@@ -30,15 +32,4 @@ const UserModel = sequelize.define('User', {
   timestamps: true
 });
 
-// Установка связи один-ко-многим между User и Event
-UserModel.hasMany(Event, {
-  foreignKey: 'createdBy',
-  as: 'events'
-});
-
-Event.belongsTo(UserModel, {
-  foreignKey: 'createdBy',
-  as: 'creator'
-});
-
-module.exports = UserModel; 
+export default UserModel;

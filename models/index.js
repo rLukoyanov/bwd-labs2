@@ -1,6 +1,6 @@
-const sequelize = require('../config/db');
-const User = require('./User');
-const Event = require('./Event');
+import sequelize from '../config/db.js';
+import User from './User.js';
+import Event from './Event.js';
 
 // Установка связи один-ко-многим между User и Event
 User.hasMany(Event, {
@@ -11,8 +11,8 @@ Event.belongsTo(User, {
   foreignKey: 'createdBy'
 });
 
-module.exports = {
+export {
   sequelize,
   User,
   Event
-}; 
+};

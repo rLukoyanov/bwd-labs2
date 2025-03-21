@@ -1,7 +1,8 @@
-const Router = require('express');
+import Router from 'express';
+import { Event } from '../models/index.js';
+import validateApiKey from '../middleware/authMiddleware.js';
+
 const router = new Router();
-const { Event } = require('../models');
-const validateApiKey = require('../middleware/authMiddleware');
 
 /**
  * @swagger
@@ -226,4 +227,4 @@ router.delete('/:id', validateApiKey, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
