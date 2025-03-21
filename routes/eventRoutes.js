@@ -73,9 +73,69 @@ const validateApiKey = require('../middleware/authMiddleware');
  *     responses:
  *       201:
  *         description: Мероприятие создано
+ *       400:
+ *         description: Ошибка при создании мероприятия
+ *   put:
+ *     summary: Обновить мероприятие
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID мероприятия
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Event'
+ *     responses:
+ *       200:
+ *         description: Мероприятие обновлено
+ *       404:
+ *         description: Мероприятие не найдено
+ *       400:
+ *         description: Ошибка при обновлении мероприятия
+ *   delete:
+ *     summary: Удалить мероприятие
+ *     security:
+ *       - ApiKeyAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID мероприятия
+ *     responses:
+ *       200:
+ *         description: Мероприятие удалено
+ *       404:
+ *         description: Мероприятие не найдено
+ *       500:
+ *         description: Ошибка при удалении мероприятия
  */
 
-// Получение списка всех мероприятий с пагинацией
+/**
+ * @swagger
+ * /api/events/{id}:
+ *   get:
+ *     summary: Получить одно мероприятие по ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID мероприятия
+ *     responses:
+ *       200:
+ *         description: Мероприятие найдено
+ *       404:
+ *         description: Мероприятие не найдено
+ */
+
 router.get('/', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1; // Если не указана страница, берем первую
@@ -99,7 +159,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Получение одного мероприятия по ID
 router.get('/:id', async (req, res) => {
     try {
         const event = await Event.findByPk(req.params.id);
@@ -112,12 +171,10 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Создание мероприятия (защищено API-ключом)
 router.post('/', validateApiKey, async (req, res) => {
     try {
         const { title, description, date, createdBy } = req.body;
         
-        // Проверка обязательных полей
         if (!title || !date || !createdBy) {
             return res.status(400).json({ message: "Не все обязательные поля заполнены" });
         }
@@ -135,7 +192,6 @@ router.post('/', validateApiKey, async (req, res) => {
     }
 });
 
-// Обновление мероприятия
 router.put('/:id', async (req, res) => {
     try {
         const { title, description, date } = req.body;
@@ -145,7 +201,6 @@ router.put('/:id', async (req, res) => {
             return res.status(404).json({ message: "Мероприятие не найдено" });
         }
 
-        // Обновляем только переданные поля
         if (title) event.title = title;
         if (description) event.description = description;
         if (date) event.date = date;
@@ -157,7 +212,6 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// Удаление мероприятия (защищено API-ключом)
 router.delete('/:id', validateApiKey, async (req, res) => {
     try {
         const event = await Event.findByPk(req.params.id);
