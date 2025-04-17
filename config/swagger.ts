@@ -1,4 +1,5 @@
-const swaggerJsdoc = require('swagger-jsdoc');
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import swaggerJsdoc from 'swagger-jsdoc';
 
 const options = {
   definition: {
@@ -15,8 +16,8 @@ const options = {
       },
     ],
   },
-  apis: ['./routes/*.js'], // путь к файлам с маршрутами
+  apis: ['./routes/*.ts'], // путь к файлам с маршрутами
 };
 
-const specs = swaggerJsdoc(options);
-module.exports = specs; 
+const specs = swaggerJsdoc(options as any);
+export default specs;
